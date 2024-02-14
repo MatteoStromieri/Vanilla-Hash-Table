@@ -1,0 +1,3 @@
+/home/mstromieri/c/dictionary/build/CMakeFiles/my_executable.dir
+/home/mstromieri/c/dictionary/build/CMakeFiles/edit_cache.dir
+/home/mstromieri/c/dictionary/build/CMakeFiles/rebuild_cache.dir
