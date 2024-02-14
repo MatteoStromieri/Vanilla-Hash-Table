@@ -79,3 +79,43 @@ unsigned int insert(dict_dtype* dict, unsigned int element){
 	return 1;
 }
 
+unsigned int delete(dict_dtype* dict, unsigned int element){
+
+        if(!lookup(dict,element))
+                return 1;
+
+        dict -> n --;
+        if (dict -> n < (dict -> N)/4){
+                // N = 2N
+                dict -> N = (dict -> N)/2;
+                // find a new prime m between N and 2N
+                unsigned int old_m = dict -> m;
+                dict -> m = prime(dict -> N, 2*(dict -> N));
+                // update the hash function
+                dict -> hashf -> m = dict -> m;
+                // malloc a new list of linked lists
+                List* new_hash_table = (List*) malloc((dict->m)*sizeof(List));
+                for(int i = 0; i < dict -> m; i++){
+                        new_hash_table[i].head = NULL;
+                }
+                // re-map all the elements inside the dictionary
+                Node* node, *new_node;
+                for (int i = 0; i < old_m; i++){
+                        node = dict -> hash_table[i].head;
+
+                        while(node != NULL){
+                                new_node = node;
+                                node = node -> next;
+                                new_node -> next = NULL;
+                                add_node(new_node,&new_hash_table[compute_hash(dict->hashf,new_node->data)]);
+
+                        }
+                }
+              dict -> hash_table = new_hash_table;
+        }
+        unsigned int hash = compute_hash(dict->hashf,element);
+        delete_node(element, &(dict -> hash_table[hash]));
+
+        return 1;
+}
+
